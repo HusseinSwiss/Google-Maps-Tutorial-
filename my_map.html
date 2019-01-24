@@ -1,0 +1,189 @@
+<!DOCTYPE html  author="Hussein Hazimeh" date="23.01.2018">
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>My Map</title>
+    <style>
+      #map {
+        height: 100%;  width:100%
+      }
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+	  #legend {
+        font-family: Arial, sans-serif;
+        background: #fff;
+        padding: 10px;
+        margin: 10px;
+        border: 3px solid #000;
+      }
+      #legend h3 {
+        margin-top: 0;
+      }
+      #legend img {
+        vertical-align: middle;
+      }
+	.tg  {border-collapse:collapse;border-spacing:0;}
+	.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+	.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+	.tg .tg-1wig{font-weight:bold;text-align:left;vertical-align:top}
+	.tg .tg-amwm{font-weight:bold;text-align:center;vertical-align:top}
+	.tg .tg-hgcj{font-weight:bold;text-align:center}
+	.tg .tg-0lax{text-align:left;vertical-align:top}
+	.tg .tg-s268{text-align:left}
+	.city{padding-top: 15px;}
+    </style>
+  </head>
+  <body>
+   
+    <div id="map"></div>
+	<div id="legend"><h3>Legend</h3></div>
+    <script>
+	
+	//to change the image shape, update them inside the folder "icons", and keep the same name of the image 
+	var iconBase = '';
+        var icons = {
+          transit: {
+            name: 'Transit',
+            icon: iconBase + 'icons/transit.png'
+          },
+          visit: {
+            name: 'Visit',
+            icon: iconBase + 'icons/visit.png'
+          },
+          long_transit: {
+            name: 'Long transit (hotel)',
+            icon: iconBase + 'icons/hotel.png'
+          }
+        };	
+	
+      function initMap() {
+	  
+	  //here add the pins (default google marker)
+         var locations = [
+      ['<b>Paris - France<img src="icons/eiffel.png" class="city" width="60" height="35" ></b><br><br>Visited 3 times <br><br><table class="tg">  <tr>    <th class="tg-amwm">#</th>    <th class="tg-amwm">From</th>    <th class="tg-hgcj">To</th>  </tr>  <tr>    <td class="tg-1wig">1</td>     <td class="tg-0lax">17/08/2015</td>    <td class="tg-s268">17/08/2016</td>   </tr>   <tr>     <td class="tg-1wig">2</td>     <td class="tg-0lax">29/01/2017</td>    <td class="tg-0lax">30/01/2017</td>  </tr>  <tr>    <td class="tg-1wig">3</td>    <td class="tg-0lax">15/03/2017</td>    <td class="tg-s268">18/03/2017</td>  </tr></table><br>', 48.8322536,2.4064051, 1],
+      ['<b>Istanbul <img src="icons/istanbul.jpg" class="city" width="50" height="35" ></b><br><br>Visited 1 time <br><br><table class="tg">  <tr>    <th class="tg-amwm">#</th>    <th class="tg-amwm">From</th>    <th class="tg-hgcj">To</th>  </tr>  <tr>    <td class="tg-1wig">1</td>    <td class="tg-0lax">29/06/2018</td>    <td class="tg-s268">06/07/2018</td>  </tr></table>', 40.9414145,29.0280916, 2],
+	  ['<b>Milan - Italy <img src="icons/milan.jpg" class="city" width="50" height="35" ></b><br><br>Visited 1 time <br><br><table class="tg">  <tr>    <th class="tg-amwm">#</th>    <th class="tg-amwm">From</th>    <th class="tg-hgcj">To</th>  </tr>  <tr>    <td class="tg-1wig">1</td>    <td class="tg-0lax">06/10/2018</td>    <td class="tg-s268">07/10/2018</td>  </tr></table>', 45.4625112,9.1655596, 3],
+	  ['<b>Strasbourg - France <img src="icons/strasbourg.jpg" class="city" width="50" height="35" ></b><br><br>Visited 1 time <br><br><table class="tg">  <tr>    <th class="tg-amwm">#</th>    <th class="tg-amwm">From</th>    <th class="tg-hgcj">To</th>  </tr>  <tr>    <td class="tg-1wig">1</td>    <td class="tg-0lax">21/10/2016</td>    <td class="tg-s268">26/10/2016</td>  </tr></table>', 48.5703677,7.720572, 4],
+	  ['<b>Antalya - Turkey <img src="icons/antalya.jpg" class="city" width="50" height="35" ></b><br><br>Visited 1 time <br><br><table class="tg">  <tr>    <th class="tg-amwm">#</th>    <th class="tg-amwm">From</th>    <th class="tg-hgcj">To</th>  </tr>  <tr>    <td class="tg-1wig">1</td>    <td class="tg-0lax">06/07/2018</td>    <td class="tg-s268">09/07/2018</td>  </tr></table>', 36.9181547,30.6815875, 5],
+	  ['<b>Barcelona - Spain <img src="icons/barcelona.jpg" class="city" width="50" height="35" ></b><br><br>Visited 1 time <br><br><table class="tg">  <tr>    <th class="tg-amwm">#</th>    <th class="tg-amwm">From</th>    <th class="tg-hgcj">To</th>  </tr>  <tr>    <td class="tg-1wig">1</td>    <td class="tg-0lax">03/02/2018</td>    <td class="tg-s268">06/02/2018</td>  </tr></table>', 41.3183664,1.83461, 6],
+	  ['<b>Bremen - Germany <img src="icons/bremen.jpg" class="city" width="50" height="35" ></b><br><br>Visited 1 time <br><br><table class="tg">  <tr>    <th class="tg-amwm">#</th>    <th class="tg-amwm">From</th>    <th class="tg-hgcj">To</th>  </tr>  <tr>    <td class="tg-1wig">1</td>    <td class="tg-0lax">13/11/2018</td>    <td class="tg-s268">17/11/2018</td>  </tr></table>', 53.080869,8.7727089, 7],
+	  ['<b>Hamburg - Germany <img src="icons/hamburg.jpg" class="city" width="50" height="35" ></b><br><br>Visited 1 time <br><br><table class="tg">  <tr>    <th class="tg-amwm">#</th>    <th class="tg-amwm">From</th>    <th class="tg-hgcj">To</th>  </tr>  <tr>    <td class="tg-1wig">1</td>    <td class="tg-0lax">16/11/2018</td>    <td class="tg-s268">16/11/2018</td>  </tr></table>', 53.5373268,9.967222, 8],
+	  ['<b>Vienna - Austria <img src="icons/vienna.jpg" class="city" width="50" height="35" ></b><br><br>Visited 2 times <br><br><table class="tg">  <tr>    <th class="tg-amwm">#</th>    <th class="tg-amwm">From</th>    <th class="tg-hgcj">To</th>  </tr>  <tr>    <td class="tg-1wig">1</td>    <td class="tg-0lax">31/09/2018</td>    <td class="tg-s268">02/10/2018</td>  </tr>  <tr>    <td class="tg-0lax"><span style="font-weight:bold">2</span></td>    <td class="tg-0lax">21/10/2017</td>    <td class="tg-0lax">25/10/2017</td>  </tr></table>',
+	  48.2146568,16.3808091,9],
+	  ['<b>Bratislava - Slovakia <img src="icons/bratislava.jpg" class="city" width="50" height="35" ></b><br><br>Visited 1 time <br><br><table class="tg">  <tr>    <th class="tg-amwm">#</th>    <th class="tg-amwm">From</th>    <th class="tg-hgcj">To</th>  </tr>  <tr>    <td class="tg-1wig">1</td>    <td class="tg-0lax">31/09/2018</td>    <td class="tg-s268">02/10/2018</td>  </tr>  </table>', 48.1241695,17.1018009,10],
+	  ['<b>Brussels - Belgium <img src="icons/brussels.jpg" class="city" width="50" height="35" ></b><br><br>Visited 1 time <br><br><table class="tg">  <tr>    <th class="tg-amwm">#</th>    <th class="tg-amwm">From</th>    <th class="tg-hgcj">To</th>  </tr>  <tr>    <td class="tg-1wig">1</td>    <td class="tg-0lax">23/05/2018</td>    <td class="tg-s268">26/05/2018</td>  </tr>  </table>', 50.7982485,4.4457263,11],
+	  ['<b>Ghent - Belgium <img src="icons/ghent.jpg" class="city" width="50" height="35" ></b><br><br>Visited 1 time <br><br><table class="tg">  <tr>    <th class="tg-amwm">#</th>    <th class="tg-amwm">From</th>    <th class="tg-hgcj">To</th>  </tr>  <tr>    <td class="tg-1wig">1</td>    <td class="tg-0lax">25/05/2018</td>    <td class="tg-s268">25/05/2018</td>  </tr>  </table>', 51.0411822,3.7713732,12],
+	  ['<b>London - United Kinkdom <img src="icons/london.jpg" class="city" width="50" height="35" ></b><br><br>Visited 1 time <br><br><table class="tg">  <tr>    <th class="tg-amwm">#</th>    <th class="tg-amwm">From</th>    <th class="tg-hgcj">To</th>  </tr>  <tr>    <td class="tg-1wig">1</td>    <td class="tg-0lax">24/09/2018</td>    <td class="tg-s268">27/29/2018</td>  </tr>  </table>', 51.5051067,-0.1031585,13],
+	  ['<b>Manchester - United Kinkdom <img src="icons/manchester.jpg" class="city" width="50" height="35" ></b><br><br>Visited 1 time <br><br><table class="tg">  <tr>    <th class="tg-amwm">#</th>    <th class="tg-amwm">From</th>    <th class="tg-hgcj">To</th>  </tr>  <tr>    <td class="tg-1wig">1</td>    <td class="tg-0lax">21/09/2018</td>    <td class="tg-s268">24/29/2018</td>  </tr>  </table>', 53.4664014,-2.2509941,14],
+	  ['<b>Da Nang - Viet Nam <img src="icons/danang.jpeg" class="city" width="50" height="35" ></b><br><br>Visited 1 time <br><br><table class="tg">  <tr>    <th class="tg-amwm">#</th>    <th class="tg-amwm">From</th>    <th class="tg-hgcj">To</th>  </tr>  <tr>    <td class="tg-1wig">1</td>    <td class="tg-0lax">02/12/2018</td>    <td class="tg-s268">09/12/2018</td>  </tr>  </table>', 16.0519042,108.2438053,14]
+	  ];
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 4,
+      center: new google.maps.LatLng(43.1238262,49.8130643),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+
+    var infowindow = new google.maps.InfoWindow();
+
+    var marker, i;
+
+    for (i = 0; i < locations.length; i++) {  
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+		icon:  icons['visit'].icon,
+		title: icons['visit'].name,
+        map: map
+      });
+
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent(locations[i][0]);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+    }
+	
+	var infowindow1;
+	var features = [
+          {
+            position: new google.maps.LatLng(49.0096941,2.5457358),
+            type: 'transit',
+			text: '<b>Paris CDG - Transit 3 times'
+          },
+		  {
+			position: new google.maps.LatLng(40.9798378,28.8177167),
+            type: 'transit',
+			text: '<b>Istanbul IST - Transit 1 time'
+          },
+		  {
+			position: new google.maps.LatLng(40.9047826,29.3128838),
+            type: 'transit',
+			text: '<b>Istanbul SAW - Transit 4 times'
+          },
+		  {
+			position: new google.maps.LatLng(37.9356509,23.9462269),
+            type: 'transit',
+			text: '<b>Athena ATH - Transit 1 time'
+          },
+		  {
+			position: new google.maps.LatLng(51.5397959,0.7001559),
+            type: 'transit',
+			text: '<b>London Southend SEN - Transit 1 time'
+          },
+		  {
+			position: new google.maps.LatLng(55.9736482,37.4103143),
+            type: 'long_transit',
+			text: '<b>Moscow Sheremetyevo SVO - Long Transit 1 time'
+          },
+		  {
+			position: new google.maps.LatLng(21.2187149,105.8019822),
+            type: 'long_transit',
+			text: '<b>Hanoi HAN - Long Transit 1 time'
+          } 
+        ];
+		
+	infowindow1 = new google.maps.InfoWindow();
+        // Create defined markers on map.
+		 features.forEach(function(feature) { 
+		 createMarker(feature.position, feature.text, icons[feature.type].icon, icons[feature.type].name,); 
+    });
+	
+	//push legend on the map
+	var legend = document.getElementById('legend');
+        for (var key in icons) {
+          var type = icons[key];
+          var name = type.name;
+          var icon = type.icon;
+          var div = document.createElement('div');
+          div.innerHTML = '<img src="' + icon + '"> ' + name;
+          legend.appendChild(div);
+    }
+		
+	function createMarker(location, content, icon, title) {
+		var marker1 = new google.maps.Marker({
+			position: location,
+			icon: icon,
+			title: title,
+			map: map
+		});
+		marker1.addListener('click', function() {
+		   infowindow1.setContent(content);
+		   infowindow1.open(map, this);
+		});
+	}
+    map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(legend);
+}
+	  
+	  
+	 
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyACQy6v9IKsILb7VcLMtz3kHCOvQuXdiSg&callback=initMap">
+    </script>
+  </body>
+</html>
